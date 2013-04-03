@@ -2,9 +2,9 @@ package main
 
 import (
 	"log"
-    "flag"
-    "net/http"
-   	"github.com/gorilla/mux"
+	"flag"
+	"net/http"
+	"github.com/gorilla/mux"
 )
 
 func rewriteURL(to string, h http.Handler) http.Handler {

@@ -8,14 +8,14 @@ import (
 )
 
 type ViewResults struct {
-	TotalRows 	float64 			`json:"total_rows"`
+	TotalRows 	float64				`json:"total_rows"`
 	Offset		float64				`json:"offset"`
 	
 	Rows []struct {
-		Id		string				`json:"id"`
+		Id		string			`json:"id"`
 		Key		[]interface{}		`json:"key"`
-        Value	interface{}			`json:"value"`
-    }	 							`json:"rows"`  
+		Value	interface{}			`json:"value"`
+	}						`json:"rows"`
 }
 
 func (vr ViewResults) histo() []map[interface{}]int {
