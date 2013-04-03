@@ -1,4 +1,4 @@
-statsviewer
+cbstats
 ===========
 
-statsviewer - A viewer for stats 
+cbstats - A viewer for stats 
