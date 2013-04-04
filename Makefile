@@ -1,5 +1,5 @@
 build:
-	go clean; 
+	go clean;
 	go install;
 
 clean:
@@ -7,7 +7,7 @@ clean:
 	go clean;
 
 jshint:
-	jshint static/js
+	jshint --config jshint_conf.js static/js
 
 test_backend:
 	go test;

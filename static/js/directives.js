@@ -22,7 +22,7 @@ function createSVG(scope, elm) {
 	scope.width = 960 - scope.margin.left - scope.margin.right;
     scope.height = 500 - scope.margin.top - scope.margin.bottom;
     scope.digitFormat = d3.format('s');
-    if (!(scope.svg !== null)) {
+    if (!(scope.svg != null)) {
         scope.svg = d3.select(elm[0]).append('svg')
                         .attr('width', scope.width + scope.margin.left + scope.margin.right)
                         .attr('height', scope.height + scope.margin.top + scope.margin.bottom)
@@ -148,7 +148,7 @@ function line(data, scope) {
 		.call(scope.yAxis);
 	
 	var l = d3.svg.line().x(function(d) { return scope.x(d.x); })
-						 .y(function(d) { return scope.y(d.y); });
+                         .y(function(d) { return scope.y(d.y); });
 	
 	scope.svg.append("path")
       .datum(data)
