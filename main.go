@@ -1,10 +1,10 @@
 package main
 
 import (
-	"log"
 	"flag"
-	"net/http"
 	"github.com/gorilla/mux"
+	"log"
+	"net/http"
 )
 
 func rewriteURL(to string, h http.Handler) http.Handler {
@@ -27,9 +27,9 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/api/bar/{ddoc}/{view}/{offset:[0-9]+}/{limit:[0-9]+}", serveBarChart).Methods("GET")
 	r.HandleFunc("/api/line/{ddoc}/{view}/{offset:[0-9]+}/{limit:[0-9]+}", serveLineChart).Methods("GET")
-	
+
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	
+
 	// application pages
 	appPages := []string{
 		"/chart/",
@@ -43,6 +43,6 @@ func main() {
 	r.Handle("/", http.RedirectHandler("/static/app.html", 302))
 	http.Handle("/", r)
 
-   	log.Printf("Listening on %v", *addr)
+	log.Printf("Listening on %v", *addr)
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }

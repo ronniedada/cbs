@@ -1,25 +1,25 @@
 package main
 
 import (
-	"log"
+	"encoding/csv"
 	"fmt"
 	"io"
-	"encoding/csv"
+	"log"
 )
 
 type ViewResults struct {
-	TotalRows 	float64				`json:"total_rows"`
-	Offset		float64				`json:"offset"`
-	
+	TotalRows float64 `json:"total_rows"`
+	Offset    float64 `json:"offset"`
+
 	Rows []struct {
-		Id		string			`json:"id"`
-		Key		[]interface{}		`json:"key"`
-		Value	interface{}			`json:"value"`
-	}						`json:"rows"`
+		Id    string        `json:"id"`
+		Key   []interface{} `json:"key"`
+		Value interface{}   `json:"value"`
+	} `json:"rows"`
 }
 
 func (vr ViewResults) histo() []map[interface{}]int {
-	log.Println("gen histogram")
+
 	if vr.Rows == nil || len(vr.Rows) == 0 {
 		log.Println("Error generating histogram : empty result set")
 		return nil
@@ -41,24 +41,24 @@ func (vr ViewResults) histo() []map[interface{}]int {
 }
 
 func (vr ViewResults) bar(histo map[interface{}]int,
-		axes []string, writer io.Writer) {
-		
+	axes []string, writer io.Writer) {
+
 	if len(axes) != 2 {
 		log.Println("Error generating bar data : invalid title length")
 		return
 	}
-	
+
 	c := csv.NewWriter(writer)
 	c.Write(axes)
-	
+
 	for k, v := range histo {
 		c.Write([]string{fmt.Sprintf("%v", k), fmt.Sprintf("%d", v)})
 	}
-	
+
 	c.Flush()
 }
 
 func (vr ViewResults) line(histo map[interface{}]int,
-		axes []string, writer io.Writer) {
-	vr.bar(histo, axes, writer);
+	axes []string, writer io.Writer) {
+	vr.bar(histo, axes, writer)
 }
