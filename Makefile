@@ -10,6 +10,6 @@ jshint:
 	jshint --config jshint_conf.js static/js
 
 test_backend:
-	go test;
+	go test -bench='.*' -v;
 
 test: test_backend jshint

@@ -40,3 +40,16 @@ func TestViewResultsUnmarshaling(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkHistoGeneration(b *testing.B) {
+	b.StopTimer()
+	vr, err := fetchView("ram", "os_ram_sizes", "0")
+	if err != nil {
+		b.Fatalf("unable to fetch view")
+	}
+	b.StartTimer()
+
+	for i := 0; i < b.N; i++ {
+		vr.histo()
+	}
+}
