@@ -1,8 +1,8 @@
 'use strict';
 
 var CONFIG = {
-		'os_type': { 'name': 'OS Distribution', 'src': '/api/bar/ram/os_ram_sizes/0/0', 'type': 'bar'},
-		'ram_sizes': { 'name': 'RAM Size', 'src': '/api/bar/ram/os_ram_sizes/1/0', 'type': 'bar'}
+		'os_type': { 'name': 'OS Distribution', 'src': '/api/bar/ram/os_ram_sizes/0/', 'type': 'bar'},
+		'ram_sizes': { 'name': 'RAM Size', 'src': '/api/bar/ram/os_ram_sizes/1/', 'type': 'bar'}
 };
 
 function ChartCtrl($scope, $routeParams, $http) {

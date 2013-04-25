@@ -2,15 +2,21 @@ package main
 
 import (
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 	"strconv"
 )
 
 func serveBarChart(w http.ResponseWriter, r *http.Request) {
-	ddoc, view, offset, limit :=
-		mux.Vars(r)["ddoc"], mux.Vars(r)["view"], mux.Vars(r)["offset"], mux.Vars(r)["limit"]
+	ddoc, view, offset :=
+		mux.Vars(r)["ddoc"], mux.Vars(r)["view"], mux.Vars(r)["offset"]
 
-	vr, err := fetchView(ddoc, view, limit)
+	vr, err := fetchView(ddoc, view)
+
+	if err != nil {
+		log.Printf("err: %v", err)
+		return
+	}
 
 	if err != nil {
 		showError(w, r, err.Error(), 404)
@@ -28,10 +34,10 @@ func serveBarChart(w http.ResponseWriter, r *http.Request) {
 }
 
 func serveLineChart(w http.ResponseWriter, r *http.Request) {
-	ddoc, view, offset, limit :=
-		mux.Vars(r)["ddoc"], mux.Vars(r)["view"], mux.Vars(r)["offset"], mux.Vars(r)["limit"]
+	ddoc, view, offset :=
+		mux.Vars(r)["ddoc"], mux.Vars(r)["view"], mux.Vars(r)["offset"]
 
-	vr, err := fetchView(ddoc, view, limit)
+	vr, err := fetchView(ddoc, view)
 
 	if err != nil {
 		showError(w, r, err.Error(), 404)

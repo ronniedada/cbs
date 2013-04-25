@@ -2,10 +2,14 @@ package main
 
 import (
 	"flag"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+
+	"github.com/couchbaselabs/go-couchbase"
+	"github.com/gorilla/mux"
 )
+
+var db *couchbase.Bucket
 
 func rewriteURL(to string, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -22,11 +26,14 @@ func showError(w http.ResponseWriter, r *http.Request,
 
 func main() {
 	addr := flag.String("addr", ":2569", "http listen address")
+	cbServ := flag.String("couchbase", "http://localhost:8091/",
+		"URL to couchbase")
+	cbBucket := flag.String("bucket", "default", "couchbase bucket")
 	flag.Parse()
 
 	r := mux.NewRouter()
-	r.HandleFunc("/api/bar/{ddoc}/{view}/{offset:[0-9]+}/{limit:[0-9]+}", serveBarChart).Methods("GET")
-	r.HandleFunc("/api/line/{ddoc}/{view}/{offset:[0-9]+}/{limit:[0-9]+}", serveLineChart).Methods("GET")
+	r.HandleFunc("/api/bar/{ddoc}/{view}/{offset:[0-9]+}/", serveBarChart).Methods("GET")
+	r.HandleFunc("/api/line/{ddoc}/{view}/{offset:[0-9]+}/", serveLineChart).Methods("GET")
 
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
@@ -43,6 +50,13 @@ func main() {
 	r.Handle("/", http.RedirectHandler("/static/app.html", 302))
 	http.Handle("/", r)
 
+	var err error
+	db, err = dbConnect(*cbServ, *cbBucket)
+	if err != nil {
+		log.Printf("Error connecting to couchbase server: %v", err)
+	}
+
 	log.Printf("Listening on %v", *addr)
+	log.Printf("Couchbase server: %v", *db)
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }

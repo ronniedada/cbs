@@ -43,7 +43,12 @@ func TestViewResultsUnmarshaling(t *testing.T) {
 
 func BenchmarkHistoGeneration(b *testing.B) {
 	b.StopTimer()
-	vr, err := fetchView("ram", "os_ram_sizes", "0")
+	var err error
+	db, err = dbConnect("http://localhost:8091/", "default")
+	if err != nil {
+		b.Fatalf("unable to connect to Couchbase server: %v", err)
+	}
+	vr, err := fetchView("ram", "os_ram_sizes")
 	if err != nil {
 		b.Fatalf("unable to fetch view")
 	}
