@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"sort"
 )
 
 type ViewResults struct {
@@ -16,6 +17,19 @@ type ViewResults struct {
 		Key   []interface{} `json:"key"`
 		Value interface{}   `json:"value"`
 	} `json:"rows"`
+}
+
+func sortedKeys(histo map[interface{}]int) ([]string, bool) {
+	var keys []string
+	for k := range histo {
+		if v, ok := k.(string); ok {
+			keys = append(keys, v)
+		} else {
+			return keys, false
+		}
+	}
+	sort.Strings(keys)
+	return keys, true
 }
 
 func (vr ViewResults) histo() []map[interface{}]int {
@@ -51,8 +65,14 @@ func (vr ViewResults) bar(histo map[interface{}]int,
 	c := csv.NewWriter(writer)
 	c.Write(axes)
 
-	for k, v := range histo {
-		c.Write([]string{fmt.Sprintf("%v", k), fmt.Sprintf("%d", v)})
+	if keys, ok := sortedKeys(histo); ok {
+		for _, k := range keys {
+			c.Write([]string{fmt.Sprintf("%v", k), fmt.Sprintf("%d", histo[k])})
+		}
+	} else {
+		for k, v := range histo {
+			c.Write([]string{fmt.Sprintf("%v", k), fmt.Sprintf("%d", v)})
+		}
 	}
 
 	c.Flush()

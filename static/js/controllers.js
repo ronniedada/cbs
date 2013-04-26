@@ -2,7 +2,8 @@
 
 var CONFIG = {
 		'os_type': { 'name': 'OS Distribution', 'src': '/api/bar/ram/os_ram_sizes/0/', 'type': 'bar'},
-		'ram_sizes': { 'name': 'RAM Size', 'src': '/api/bar/ram/os_ram_sizes/1/', 'type': 'bar'}
+		'ram_sizes': { 'name': 'RAM Size', 'src': '/api/bar/ram/os_ram_sizes/1/', 'type': 'bar'},
+		'contact_by_date': { 'name': 'Contact By Date', 'src': '/api/line/overtime/contact_by_date/0/', 'type': 'line'}
 };
 
 function ChartCtrl($scope, $routeParams, $http) {

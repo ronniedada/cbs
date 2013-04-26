@@ -113,7 +113,7 @@ function bar(data, scope) {
 
 function line(data, scope) {
 	
-	scope.x = d3.scale.linear()
+	scope.x = d3.time.scale()
 		.range([0, scope.width]);
 
 	scope.y = d3.scale.linear()
@@ -127,9 +127,9 @@ function line(data, scope) {
 		.scale(scope.y)
 		.orient('left')
 		.tickFormat(scope.digitFormat);
-	
+
 	data.forEach(function(d) {
-		d.x = +d.x;
+		d.x = d3.time.format("%Y-%m-%d").parse(d.x);
 		d.y = +d.y;
 	});
 	
