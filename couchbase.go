@@ -18,11 +18,11 @@ func dbConnect(serv, bucket string) (*couchbase.Bucket, error) {
 	return rv, nil
 }
 
-func fetchView(ddoc string, view string) (ViewResults, error) {
-	log.Printf("fetching view: ddoc = %v, view = %v", ddoc, view)
+func fetchView(ddoc string, view string, args map[string]interface{}) (ViewResults, error) {
+	log.Printf("fetching view: ddoc = %v, view = %v, args = %v", ddoc, view, args)
 
 	vr := ViewResults{}
-	err := db.ViewCustom(ddoc, view, nil, &vr)
+	err := db.ViewCustom(ddoc, view, args, &vr)
 
 	return vr, err
 }

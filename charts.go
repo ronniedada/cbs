@@ -11,7 +11,7 @@ func serveBarChart(w http.ResponseWriter, r *http.Request) {
 	ddoc, view, offset :=
 		mux.Vars(r)["ddoc"], mux.Vars(r)["view"], mux.Vars(r)["offset"]
 
-	vr, err := fetchView(ddoc, view)
+	vr, err := fetchView(ddoc, view, map[string]interface{}{"stale": "update_after"})
 
 	if err != nil {
 		log.Printf("err: %v", err)
@@ -37,7 +37,7 @@ func serveLineChart(w http.ResponseWriter, r *http.Request) {
 	ddoc, view, offset :=
 		mux.Vars(r)["ddoc"], mux.Vars(r)["view"], mux.Vars(r)["offset"]
 
-	vr, err := fetchView(ddoc, view)
+	vr, err := fetchView(ddoc, view, map[string]interface{}{"stale": "update_after"})
 
 	if err != nil {
 		showError(w, r, err.Error(), 404)
