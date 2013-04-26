@@ -38,20 +38,21 @@ function updateChart(newData, oldData, scope) {
 	
 	var type = newData.type;
 	var data = d3.csv.parse(newData.data);
+	var args = newData.args;
 	
 	switch(type) {
 	case 'bar':
-		bar(data, scope);
+		bar(data, scope, args);
 		break;
 	case 'line':
-		line(data, scope);
+		line(data, scope, args);
 		break;
 	default:
-		bar(data, scope);
+		bar(data, scope, args);
 	}
 }
 
-function bar(data, scope) {
+function bar(data, scope, args) {
 	
 	scope.x = d3.scale.ordinal()
 		.rangeRoundBands([0, scope.width], 0.1);
@@ -111,10 +112,15 @@ function bar(data, scope) {
 	scope.svg.select(".y.axis").transition().call(scope.yAxis);
 }
 
-function line(data, scope) {
+function line(data, scope, args) {
 	
-	scope.x = d3.time.scale()
+	if ('xparse' in args && args.xparse === 'time') {
+		scope.x = d3.time.scale()
 		.range([0, scope.width]);
+	} else {
+		scope.x = d3.scale.linear()
+		.range([0, scope.width]);
+	}
 
 	scope.y = d3.scale.linear()
 		.range([scope.height, 0]);
@@ -129,7 +135,11 @@ function line(data, scope) {
 		.tickFormat(scope.digitFormat);
 
 	data.forEach(function(d) {
-		d.x = d3.time.format("%Y-%m-%d").parse(d.x);
+		if ('xparse' in args && args.xparse === 'time') {
+			d.x = d3.time.format("%Y-%m-%d").parse(d.x);
+		} else {
+			d.x = +d.x;
+		}
 		d.y = +d.y;
 	});
 	

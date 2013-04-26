@@ -1,9 +1,9 @@
 'use strict';
 
 var CONFIG = {
-		'os_type': { 'name': 'OS Distribution', 'src': '/api/bar/ram/os_ram_sizes/0/', 'type': 'bar'},
-		'ram_sizes': { 'name': 'RAM Size', 'src': '/api/bar/ram/os_ram_sizes/1/', 'type': 'bar'},
-		'contact_by_date': { 'name': 'Contact By Date', 'src': '/api/line/overtime/contact_by_date/0/', 'type': 'line'}
+		'os_type': { 'name': 'OS Distribution', 'src': '/api/bar/ram/os_ram_sizes/0/', 'type': 'bar', 'args': {}},
+		'ram_sizes': { 'name': 'RAM Size', 'src': '/api/bar/ram/os_ram_sizes/1/', 'type': 'bar', 'args': {}},
+		'contact_by_date': { 'name': 'Contact By Date', 'src': '/api/line/overtime/contact_by_date/0/', 'type': 'line', 'args': {'xparse': 'time'}}
 };
 
 function ChartCtrl($scope, $routeParams, $http) {
@@ -14,31 +14,25 @@ function ChartCtrl($scope, $routeParams, $http) {
 		var dic  = CONFIG[path];
 		switch(dic.type) {
 		case 'bar':
-			BarCtrl(dic.src, $scope, $http);
+			BarCtrl(dic.src, dic.args, $scope, $http);
 			break;
 		case 'line':
-			LineCtrl(dic.src, $scope, $http);
+			LineCtrl(dic.src, dic.args, $scope, $http);
 			break;
 		default:
-			BarCtrl(dic.src, $scope, $http);
+			BarCtrl(dic.src, dic.args, $scope, $http);
 		}
 	}
 }
 
-function BarCtrl(src, $scope,  $http) {
+function BarCtrl(src, args, $scope,  $http) {
     $scope.data = $http.get(src).then(function(resp) {
-        return {'type': 'bar', 'data': resp.data};
+        return {'type': 'bar', 'data': resp.data, 'args': args};
     });
-	
-//	$scope.updateBar = function() {
-//		$scope.data = $http.get("/api/bar/ram/os_ram_sizes/1/0").then(function(resp) {
-//	        return resp.data;
-//	    });
-//	};	
 }
 
-function LineCtrl(src, $scope, $http){
+function LineCtrl(src, args, $scope, $http){
     $scope.data = $http.get(src).then(function(resp) {
-        return {'type': 'line', 'data': resp.data};
+        return {'type': 'line', 'data': resp.data, 'args': args};
     });
 }
