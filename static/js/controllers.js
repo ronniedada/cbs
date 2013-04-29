@@ -1,9 +1,10 @@
 'use strict';
 
 var CONFIG = {
-		'os_type': { 'name': 'OS Distribution', 'src': '/api/bar/ram/os_ram_sizes/0/', 'type': 'bar', 'args': {}},
-		'ram_sizes': { 'name': 'RAM Size', 'src': '/api/bar/ram/os_ram_sizes/1/', 'type': 'bar', 'args': {}},
-		'contact_by_date': { 'name': 'Contact By Date', 'src': '/api/line/overtime/contact_by_date/0/', 'type': 'line', 'args': {'xparse': 'time'}}
+		'os_type': { 'name': 'OS Distribution', 'src': '/api/bar/ram/os_ram_sizes/?y_index=0', 'type': 'bar', 'args': {}},
+		'ram_sizes': { 'name': 'RAM Size', 'src': '/api/bar/ram/os_ram_sizes/?y_index=1', 'type': 'bar', 'args': {}},
+		'contact_by_date': { 'name': 'Contact By Date', 'src': '/api/line/overtime/contact_by_date/?y_index=0', 'type': 'line', 'args': {'xparse': 'time'}},
+		'browser_by_cluster': {'name': "Browser By Cluster", 'src': '/api/stackedbar/browser/nodes_counts/?group_level=2&y_index=0&x_index=1&range_index=0&range=8', 'type': 'stackedbar', 'args': {}}
 };
 
 function ChartCtrl($scope, $routeParams, $http) {
@@ -18,6 +19,9 @@ function ChartCtrl($scope, $routeParams, $http) {
 			break;
 		case 'line':
 			LineCtrl(dic.src, dic.args, $scope, $http);
+			break;
+		case 'stackedbar':
+			StackedBarCtrl(dic.src, dic.args, $scope, $http);
 			break;
 		default:
 			BarCtrl(dic.src, dic.args, $scope, $http);
@@ -34,5 +38,11 @@ function BarCtrl(src, args, $scope,  $http) {
 function LineCtrl(src, args, $scope, $http){
     $scope.data = $http.get(src).then(function(resp) {
         return {'type': 'line', 'data': resp.data, 'args': args};
+    });
+}
+
+function StackedBarCtrl(src, args, $scope, $http){
+    $scope.data = $http.get(src).then(function(resp) {
+        return {'type': 'stackedbar', 'data': resp.data, 'args': args};
     });
 }

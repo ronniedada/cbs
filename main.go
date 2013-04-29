@@ -32,8 +32,9 @@ func main() {
 	flag.Parse()
 
 	r := mux.NewRouter()
-	r.HandleFunc("/api/bar/{ddoc}/{view}/{offset:[0-9]+}/", serveBarChart).Methods("GET")
-	r.HandleFunc("/api/line/{ddoc}/{view}/{offset:[0-9]+}/", serveLineChart).Methods("GET")
+	r.HandleFunc("/api/bar/{ddoc}/{view}/", serveBarChart).Methods("GET")
+	r.HandleFunc("/api/line/{ddoc}/{view}/", serveLineChart).Methods("GET")
+	r.HandleFunc("/api/stackedbar/{ddoc}/{view}/", serveStackedBarChart).Methods("GET")
 
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
@@ -57,6 +58,5 @@ func main() {
 	}
 
 	log.Printf("Listening on %v", *addr)
-	log.Printf("Couchbase server: %v", *db)
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }

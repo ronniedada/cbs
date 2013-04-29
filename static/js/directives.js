@@ -47,6 +47,9 @@ function updateChart(newData, oldData, scope) {
 	case 'line':
 		line(data, scope, args);
 		break;
+	case 'stackedbar':
+		stackedBar(data, scope, args);
+		break;
 	default:
 		bar(data, scope, args);
 	}
@@ -167,4 +170,81 @@ function line(data, scope, args) {
 	
 	scope.svg.select(".x.axis").transition().call(scope.xAxis);
 	scope.svg.select(".y.axis").transition().call(scope.yAxis);
+}
+
+function stackedBar(data, scope, args) {
+	scope.x = d3.scale.ordinal()
+		.rangeRoundBands([0, scope.width], 0.1);
+
+	scope.y = d3.scale.linear()
+		.rangeRound([scope.height, 0]);
+
+	scope.color = d3.scale.ordinal()
+		.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b",
+                "#a05d56", "#d0743c", "#ff8c00"]);
+
+	scope.xAxis = d3.svg.axis()
+		.scale(scope.x)
+		.orient("bottom");
+
+	scope.yAxis = d3.svg.axis()
+		.scale(scope.y)
+		.orient("left")
+		.tickFormat(scope.digitFormat);
+
+    scope.color.domain(d3.keys(data[0]).filter(function(key) { return key !== "x"; }));
+
+	data.forEach(function(d) {
+		var y0 = 0;
+		d.vals = scope.color.domain().map(
+				function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
+		d.total = d.vals[d.vals.length - 1].y1;
+	});
+
+	data.sort(function(a, b) { return b.total - a.total; });
+
+	scope.x.domain(data.map(function(d) { return d.x; }));
+	scope.y.domain([0, d3.max(data, function(d) { return d.total; })]);
+
+	scope.svg.append("g")
+     .attr("class", "x axis")
+     .attr("transform", "translate(0," + scope.height + ")")
+     .call(scope.xAxis);
+
+	scope.svg.append('g')
+	.attr('class', 'y axis')
+	.call(scope.yAxis);
+
+    scope.xlabel = scope.svg.selectAll(".x")
+     .data(data)
+   .enter().append("g")
+     .attr("class", "g")
+     .attr("transform", function(d) { return "translate(" + scope.x(d.x) + ",0)"; });
+
+    scope.xlabel.selectAll("rect")
+     .data(function(d) { return d.vals; })
+   .enter().append("rect")
+     .attr("width", scope.x.rangeBand())
+     .attr("y", function(d) { return scope.y(d.y1); })
+     .attr("height", function(d) { return scope.y(d.y0) - scope.y(d.y1); })
+     .style("fill", function(d) { return scope.color(d.name); });
+
+    scope.legend = scope.svg.selectAll(".legend")
+     .data(scope.color.domain().slice().reverse())
+   .enter().append("g")
+     .attr("class", "legend")
+     .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+    scope.legend.append("rect")
+     .attr("x", scope.width - 18)
+     .attr("width", 18)
+     .attr("height", 18)
+     .style("fill", scope.color);
+
+    scope.legend.append("text")
+     .attr("x", scope.width - 24)
+     .attr("y", 9)
+     .attr("dy", ".35em")
+     .style("text-anchor", "end")
+     .text(function(d) { return d; });
 }
