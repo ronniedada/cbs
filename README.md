@@ -1,4 +1,4 @@
-cbstats
+cbs
 ===========
 
-cbstats - A viewer for stats 
+cbs - A viewer for couchbase phone home stats 

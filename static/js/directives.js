@@ -2,7 +2,7 @@
 
 var createSVG, updateChart, bar, line;
 
-angular.module('cbstats.directives', [])
+angular.module('cbs.directives', [])
   .directive('chart', [
    function() {
     return {

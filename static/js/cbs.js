@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cbstats', ['cbstats.directives']).
+angular.module('cbs', ['cbs.directives']).
 config(['$routeProvider', '$locationProvider', 
         function($routeProvider, $locationProvider) {
 	$routeProvider.when('/chart/:path/', {templateUrl: '/static/partials/chart.html', controller: ChartCtrl});

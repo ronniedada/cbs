@@ -3,7 +3,7 @@ build:
 	go install;
 
 clean:
-	rm -fr cbstat;
+	rm -fr cbs;
 	go clean;
 
 jshint:
