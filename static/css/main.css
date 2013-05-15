@@ -3,6 +3,10 @@ li {
 	text-align: -webkit-match-parent;
 }
 
+.title {
+	text-align: center;
+}
+
 .axis path,
 .axis line {
   fill: none;

@@ -19,6 +19,7 @@ function ChartCtrl($scope, $routeParams, $http) {
 	
 	if (path !== undefined && path in CONFIG) {
 		var dic  = CONFIG[path];
+		$scope.name = dic.name
 	    $scope.data = $http.get(dic.src).then(function(resp) {
 	        return {'type': dic.type, 'data': resp.data, 'args': dic.args};
 	    });
