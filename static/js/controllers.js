@@ -2,10 +2,8 @@
 
 // TODO: move to a saparate file
 var CONFIG = {
-		'os_type': { 'name': 'OS Distribution', 'src': '/api/bar/ram/os_ram_sizes/?y_index=0',
+		'os_type': { 'name': 'OS Distribution', 'src': '/api/bar/ram/os_ram_sizes/?group_level=1',
 					 'type': 'bar', 'args': {}},
-		'ram_sizes': { 'name': 'RAM Size', 'src': '/api/bar/ram/os_ram_sizes/?y_index=1',
-			           'type': 'bar', 'args': {}},
 		'contact_by_date': { 'name': 'Contact By Date', 'src': '/api/line/overtime/contact_by_date/?group_level=1',
 							 'type': 'line', 'args': {'xparse': 'time'}},
 		'contact_by_day': {'name': "Contact By Day of Week", 'src': '/api/bar/overtime/contact_by_day_hour_size/?group_level=1',
