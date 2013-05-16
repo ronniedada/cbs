@@ -156,19 +156,7 @@ func (vr ViewResults) stackedBar(xIndex int, rangeIndex int,
 			continue
 		}
 
-		var val int
-		var err error
-		switch t := row.Value.(type) {
-		case string:
-			val, err = strconv.Atoi(t)
-			if err != nil {
-				val = 0
-			}
-		case float64:
-			val = int(t)
-		default:
-			val = 0
-		}
+		val, _ := toInt(row.Value)
 
 		if _, ok := bins[row.Key[xIndex]][quotient]; !ok {
 			bins[row.Key[xIndex]][quotient] = val
