@@ -57,6 +57,8 @@ func main() {
 		log.Printf("Error connecting to couchbase server: %v", err)
 	}
 
+	defer db.Close()
+
 	log.Printf("Listening on %v", *addr)
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }
