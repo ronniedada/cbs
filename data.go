@@ -33,10 +33,49 @@ func sortedKeys(histo map[interface{}]int) ([]string, bool) {
 	return keys, true
 }
 
-func (vr ViewResults) histo() []map[interface{}]int {
+func toInt(val interface{}) (int, error) {
+	var rv int
+	var err error
+
+	switch t := val.(type) {
+	case string:
+		rv, err = strconv.Atoi(t)
+		if err != nil {
+			return 0, err
+		}
+	case float64:
+		rv = int(t)
+	default:
+		rv = 0
+	}
+
+	return rv, nil
+}
+
+func (vr ViewResults) extractHisto() map[interface{}]int {
+	if vr.Rows == nil || len(vr.Rows) == 0 {
+		log.Println("Error extracting histogram : empty result set")
+		return nil
+	}
+
+	histo := make(map[interface{}]int)
+
+	for _, row := range vr.Rows {
+		if len(row.Key) != 1 {
+			log.Println("unable to extract histogram : invalid num of keys")
+			return histo
+		}
+
+		histo[row.Key[0]], _ = toInt(row.Value)
+	}
+
+	return histo
+}
+
+func (vr ViewResults) calcHistos() []map[interface{}]int {
 
 	if vr.Rows == nil || len(vr.Rows) == 0 {
-		log.Println("Error generating histogram : empty result set")
+		log.Println("Error calculating histogram : empty result set")
 		return nil
 	}
 	histo := make([]map[interface{}]int, len(vr.Rows[0].Key))
