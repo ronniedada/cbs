@@ -2,6 +2,15 @@
 
 var createSVG, updateChart, bar, line;
 
+var weekday=new Array(7);
+weekday[0]="Sunday";
+weekday[1]="Monday";
+weekday[2]="Tuesday";
+weekday[3]="Wednesday";
+weekday[4]="Thursday";
+weekday[5]="Friday";
+weekday[6]="Saturday";
+
 angular.module('cbs.directives', [])
   .directive('chart', [
    function() {
@@ -56,6 +65,12 @@ function updateChart(newData, oldData, scope) {
 }
 
 function bar(data, scope, args) {
+	if ('xparse' in args && args.xparse === 'day') {
+		data.sort(function(a, b){return a.x - b.x});
+		data.forEach(function(d) {
+			d.x = weekday[+d.x];
+		});
+	}
 	
 	scope.x = d3.scale.ordinal()
 		.rangeRoundBands([0, scope.width], 0.1);
