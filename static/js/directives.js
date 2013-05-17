@@ -70,6 +70,8 @@ function bar(data, scope, args) {
 		data.forEach(function(d) {
 			d.x = weekday[+d.x];
 		});
+	} else if ('xparse' in args && args.xparse === 'hour') {
+		data.sort(function(a, b){return a.x - b.x});
 	}
 	
 	scope.x = d3.scale.ordinal()

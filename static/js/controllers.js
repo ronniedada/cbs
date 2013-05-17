@@ -8,6 +8,8 @@ var CONFIG = {
 							 'type': 'line', 'args': {'xparse': 'time'}},
 		'contact_by_day': {'name': "Contact By Day of Week", 'src': '/api/bar/overtime/contact_by_day_hour_size/?group_level=1',
 							'type': 'bar', 'args': {'xparse': 'day'}},
+		'contact_by_hour': {'name': "Contact By Hour of Day", 'src': '/api/bar/overtime/contact_by_hour/?group_level=1',
+						    'type': 'bar', 'args': {'xparse': 'hour'}},
 		'browser_by_cluster': {'name': "Browser By Cluster", 'src': '/api/stackedbar/browser/nodes_counts/?group_level=2&y_index=0&x_index=1&range_index=0&range=8',
 							   'type': 'stackedbar', 'args': {}},
 		'os_by_cluster': {'name': "OS By Cluster", 'src': '/api/stackedbar/os/os_nodes/?group_level=2&y_index=1&x_index=0&range_index=1&range=8',
