@@ -75,6 +75,7 @@ func serveStackedBarChart(w http.ResponseWriter, r *http.Request) {
 	groupLevel := r.FormValue("group_level")
 	i, err := strconv.Atoi(groupLevel)
 
+	log.Printf("group_level: %v", groupLevel)
 	if err != nil {
 		args = map[string]interface{}{"stale": "update_after"}
 	} else {

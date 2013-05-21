@@ -126,7 +126,15 @@ func (vr ViewResults) line(histo map[interface{}]int,
 func (vr ViewResults) stackedBar(xIndex int, rangeIndex int,
 	ran int, writer io.Writer) {
 	/*
-		Sample output:
+		- Sample output (without range calculation, ran <= 0):
+
+		x,lnx,mac,mixed,win
+		lnx,0,64,0,0,0
+		win,0,0,0,0,37
+		mixed,0,0,0,7,0
+		mac,0,0,1,0,0
+
+		- Sample output (after range calculation, ran = 10):
 
 		x,0 to 10,10 to 20,20 to 30,30 to 40,40 to 50
 		Chrome,247412,4095,179,717,146
@@ -139,56 +147,100 @@ func (vr ViewResults) stackedBar(xIndex int, rangeIndex int,
 	*/
 	c := csv.NewWriter(writer)
 	bins := make(map[interface{}]map[interface{}]int)
-	maxQuotient := 0
 
-	for _, row := range vr.Rows {
-		if _, ok := bins[row.Key[xIndex]]; !ok {
-			bins[row.Key[xIndex]] = make(map[interface{}]int)
-		}
+	if ran <= 0 {
+		// results have already been reduced, arrange and print out its content
+		xaxes := make(map[interface{}]int)
+		ranges := make(map[interface{}]int)
+		xaxesSorted := []string{}
+		rangesSorted := []string{"x"}
 
-		var quotient int
-		if v, ok := row.Key[rangeIndex].(float64); ok {
-			quotient = int(v) / ran
-			if quotient > maxQuotient {
-				maxQuotient = quotient
+		for _, row := range vr.Rows {
+			if _, ok := bins[row.Key[xIndex]]; !ok {
+				bins[row.Key[xIndex]] = make(map[interface{}]int)
 			}
-		} else {
-			continue
+			if _, ok := bins[row.Key[xIndex]][row.Key[rangeIndex]]; !ok {
+				val, _ := toInt(row.Value)
+				bins[row.Key[xIndex]][row.Key[rangeIndex]] = val
+			}
+			xaxes[row.Key[xIndex]] = 1
+			ranges[row.Key[rangeIndex]] = 1
 		}
-
-		val, _ := toInt(row.Value)
-
-		if _, ok := bins[row.Key[xIndex]][quotient]; !ok {
-			bins[row.Key[xIndex]][quotient] = val
-		} else {
-			bins[row.Key[xIndex]][quotient] += val
+		if v, ok := sortedKeys(ranges); ok {
+			for _, k := range v {
+				rangesSorted = append(rangesSorted, k)
+			}
 		}
-	}
-
-	var keys []string
-	for k := range bins {
-		if v, ok := k.(string); ok {
-			keys = append(keys, v)
+		if v, ok := sortedKeys(xaxes); ok {
+			xaxesSorted = v
 		}
-	}
-	sort.Strings(keys)
+		c.Write(rangesSorted)
 
-	title := []string{"x"}
-	for i := 0; i < maxQuotient; i++ {
-		title = append(title, fmt.Sprintf("%v to %v", i*ran, (i+1)*ran))
-	}
-	c.Write(title)
-	for _, xaxis := range keys {
-		line := []string{xaxis}
-		for i := 0; i < maxQuotient; i++ {
-			if v, ok := bins[xaxis][i]; ok {
-				line = append(line, fmt.Sprintf("%v", v))
+		for _, xaxis := range xaxesSorted {
+			line := []string{xaxis}
+			for _, i := range rangesSorted {
+				if v, ok := bins[xaxis][i]; ok {
+					line = append(line, fmt.Sprintf("%v", v))
+				} else {
+					line = append(line, "0")
+				}
+			}
+			c.Write(line)
+		}
+		c.Flush()
+	} else {
+		// range calculation
+		maxQuotient := 0
+
+		for _, row := range vr.Rows {
+			if _, ok := bins[row.Key[xIndex]]; !ok {
+				bins[row.Key[xIndex]] = make(map[interface{}]int)
+			}
+
+			var quotient int
+			if v, ok := row.Key[rangeIndex].(float64); ok {
+				quotient = int(v) / ran
+				if quotient > maxQuotient {
+					maxQuotient = quotient
+				}
 			} else {
-				line = append(line, "0")
+				continue
+			}
+
+			val, _ := toInt(row.Value)
+
+			if _, ok := bins[row.Key[xIndex]][quotient]; !ok {
+				bins[row.Key[xIndex]][quotient] = val
+			} else {
+				bins[row.Key[xIndex]][quotient] += val
 			}
 		}
-		c.Write(line)
-	}
 
-	c.Flush()
+		var xaxes []string
+		for k := range bins {
+			if v, ok := k.(string); ok {
+				xaxes = append(xaxes, v)
+			}
+		}
+		sort.Strings(xaxes)
+
+		title := []string{"x"}
+		for i := 0; i < maxQuotient; i++ {
+			title = append(title, fmt.Sprintf("%v to %v", i*ran, (i+1)*ran))
+		}
+		c.Write(title)
+		for _, xaxis := range xaxes {
+			line := []string{xaxis}
+			for i := 0; i < maxQuotient; i++ {
+				if v, ok := bins[xaxis][i]; ok {
+					line = append(line, fmt.Sprintf("%v", v))
+				} else {
+					line = append(line, "0")
+				}
+			}
+			c.Write(line)
+		}
+
+		c.Flush()
+	}
 }

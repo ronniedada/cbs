@@ -4,6 +4,10 @@
 var CONFIG = {
 		'os_type': { 'name': 'OS Distribution', 'src': '/api/bar/ram/os_ram_sizes/?group_level=1',
 					 'type': 'bar', 'args': {}},
+		'version': { 'name': 'Version Distribution', 'src': '/api/bar/version/version/?group_level=1',
+					 'type': 'bar', 'args': {}},
+		'version_by_os': { 'name': 'Version By OS', 'src': '/api/stackedbar/version/os_version/?group_level=2&y_index=0&x_index=1',
+					       'type': 'stackedbar', 'args': {}},
 		'contact_by_date': { 'name': 'Contact By Date', 'src': '/api/line/overtime/contact_by_date/?group_level=1',
 							 'type': 'line', 'args': {'xparse': 'time'}},
 		'contact_by_day': {'name': "Contact By Day of Week", 'src': '/api/bar/overtime/contact_by_day_hour_size/?group_level=1',
