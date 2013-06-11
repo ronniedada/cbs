@@ -27,3 +27,9 @@ li {
   stroke: steelblue;
   stroke-width: 1.5px;
 }
+
+path {
+  stroke: white;
+  stroke-width: 0.25px;
+  fill: grey;
+}
