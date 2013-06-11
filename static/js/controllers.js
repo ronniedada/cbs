@@ -17,7 +17,9 @@ var CONFIG = {
 		'browser_by_cluster': {'name': "Browser By Cluster", 'src': '/api/stackedbar/browser/nodes_counts/?group_level=2&y_index=0&x_index=1&range_index=0&range=8',
 							   'type': 'stackedbar', 'args': {}},
 		'os_by_cluster': {'name': "OS By Cluster", 'src': '/api/stackedbar/os/os_nodes/?group_level=2&y_index=1&x_index=0&range_index=1&range=8',
-						  'type': 'stackedbar', 'args': {}}
+						  'type': 'stackedbar', 'args': {}},
+		'worldmap': {'name': "Geo Distribution", 'src': '/api/worldmap/geo/location_os_size/?group_level=4',
+						  'type': 'worldmap', 'args': {}}
 };
 
 function ChartCtrl($scope, $routeParams, $http) {

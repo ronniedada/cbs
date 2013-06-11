@@ -59,6 +59,9 @@ function updateChart(newData, oldData, scope) {
 	case 'stackedbar':
 		stackedBar(data, scope, args);
 		break;
+	case 'worldmap':
+		worldMap(data, scope, args);
+		break;
 	default:
 		bar(data, scope, args);
 	}
@@ -264,4 +267,23 @@ function stackedBar(data, scope, args) {
      .attr("dy", ".35em")
      .style("text-anchor", "end")
      .text(function(d) { return d; });
+}
+
+function worldMap(data, scope, args) {
+	var projection = d3.geo.mercator()
+		.rotate([-180,0]);
+
+	var path = d3.geo.path()
+		.projection(projection);
+
+	var g = scope.svg.append("g");
+	// load and display the World
+	d3.json("/static/lib/world-110m2.json", function(error, topology) {
+	    g.selectAll("path")
+	      .data(topojson.object(topology, topology.objects.countries)
+	          .geometries)
+	    .enter()
+	      .append("path")
+	      .attr("d", path);
+	});
 }

@@ -96,3 +96,29 @@ func serveStackedBarChart(w http.ResponseWriter, r *http.Request) {
 
 	vr.stackedBar(xIndex, rangeIndex, ran, w)
 }
+
+func serveWorldMapChart(w http.ResponseWriter, r *http.Request) {
+	ddoc, view := mux.Vars(r)["ddoc"], mux.Vars(r)["view"]
+
+	var args map[string]interface{}
+
+	groupLevel := r.FormValue("group_level")
+	i, err := strconv.Atoi(groupLevel)
+
+	log.Printf("group_level: %v", groupLevel)
+	if err != nil {
+		args = map[string]interface{}{"stale": "update_after"}
+	} else {
+		args = map[string]interface{}{"stale": "update_after",
+			"group_level": i}
+	}
+
+	vr, err := fetchView(ddoc, view, args)
+
+	if err != nil {
+		showError(w, r, err.Error(), 404)
+		return
+	}
+
+	// TODO: format the data
+}

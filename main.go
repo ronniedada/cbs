@@ -35,6 +35,7 @@ func main() {
 	r.HandleFunc("/api/bar/{ddoc}/{view}/", serveBarChart).Methods("GET")
 	r.HandleFunc("/api/line/{ddoc}/{view}/", serveLineChart).Methods("GET")
 	r.HandleFunc("/api/stackedbar/{ddoc}/{view}/", serveStackedBarChart).Methods("GET")
+	r.HandleFunc("/api/worldmap/{ddoc}/{view}/", serveWorldMapChart).Methods("GET")
 
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
