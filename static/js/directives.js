@@ -286,4 +286,19 @@ function worldMap(data, scope, args) {
 	      .append("path")
 	      .attr("d", path);
 	});
+
+	// load and display circles
+	g.selectAll("circle")
+	     .data(data)
+	     .enter()
+	     .append("circle")
+	     .attr("cx", function(d) {
+	             return projection([d.long, d.lat])[0];
+	     })
+	     .attr("cy", function(d) {
+	             return projection([d.long, d.lat])[1];
+	     })
+	     .attr("r", 5)
+	     .style("fill", "red");
+
 }
