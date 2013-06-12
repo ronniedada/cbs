@@ -281,6 +281,7 @@ function worldMap(data, scope, args) {
 		.projection(projection);
 
 	var g = scope.svg.append("g");
+
 	// load and display the World
 	d3.json("/static/lib/world-110m2.json", function(error, topology) {
 	    g.selectAll("path")
@@ -289,24 +290,24 @@ function worldMap(data, scope, args) {
 	    .enter()
 	      .append("path")
 	      .attr("d", path);
-	});
 
-	// load and display circles
-	g.selectAll("circle")
-	     .data(data)
-	     .enter()
-	     .append("circle")
-	     .attr("cx", function(d) {
-	         return projection([d.long, d.lat])[0];
-	     })
-	     .attr("cy", function(d) {
-	         return projection([d.long, d.lat])[1];
-	     })
-	     .attr("r", function(d) {
-	         return Math.log(d.size);
-	     })
-	     .style("fill", function(d){
-	         return colors[d.os];
-	     });
+		// load and display circles
+		g.selectAll("circle")
+		     .data(data)
+		     .enter()
+		     .append("circle")
+		     .attr("cx", function(d) {
+		         return projection([d.long, d.lat])[0];
+		     })
+		     .attr("cy", function(d) {
+		         return projection([d.long, d.lat])[1];
+		     })
+		     .attr("r", function(d) {
+		         return Math.log(d.size);
+		     })
+		     .style("fill", function(d){
+		         return colors[d.os];
+		     });
+	});
 
 }
