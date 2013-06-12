@@ -244,3 +244,20 @@ func (vr ViewResults) stackedBar(xIndex int, rangeIndex int,
 		c.Flush()
 	}
 }
+
+func (vr ViewResults) worldmap(writer io.Writer) {
+	c := csv.NewWriter(writer)
+	axes := []string{"country", "lat", "long", "os", "size"}
+
+	c.Write(axes)
+
+	for _, row := range vr.Rows {
+		line := []string{fmt.Sprintf("%v", row.Key[0]),
+			fmt.Sprintf("%v", row.Key[1]),
+			fmt.Sprintf("%v", row.Key[2]),
+			fmt.Sprintf("%v", row.Key[3])}
+		line = append(line, fmt.Sprintf("%v", row.Value))
+		c.Write(line)
+	}
+	c.Flush()
+}

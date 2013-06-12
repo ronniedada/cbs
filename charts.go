@@ -120,5 +120,5 @@ func serveWorldMapChart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: format the data
+	vr.worldmap(w)
 }
