@@ -270,6 +270,10 @@ function stackedBar(data, scope, args) {
 }
 
 function worldMap(data, scope, args) {
+
+	var colors = {"lnx": "#fd61d1", "win": "#00bcd8", "mac": "#00ba38",
+				  "mixed": "#f8766d", "sol":"#00b0f6", "others":"#a3a500"};
+
 	var projection = d3.geo.mercator()
 		.rotate([-180,0]);
 
@@ -293,12 +297,16 @@ function worldMap(data, scope, args) {
 	     .enter()
 	     .append("circle")
 	     .attr("cx", function(d) {
-	             return projection([d.long, d.lat])[0];
+	         return projection([d.long, d.lat])[0];
 	     })
 	     .attr("cy", function(d) {
-	             return projection([d.long, d.lat])[1];
+	         return projection([d.long, d.lat])[1];
 	     })
-	     .attr("r", 5)
-	     .style("fill", "red");
+	     .attr("r", function(d) {
+	         return Math.log(d.size);
+	     })
+	     .style("fill", function(d){
+	         return colors[d.os];
+	     });
 
 }
