@@ -271,8 +271,11 @@ function stackedBar(data, scope, args) {
 
 function worldMap(data, scope, args) {
 
-	var colors = {"lnx": "#fd61d1", "win": "#00bcd8", "mac": "#00ba38",
-				  "mixed": "#f8766d", "sol":"#00b0f6", "others":"#a3a500"};
+	scope.color = d3.scale.ordinal()
+		.range(["#fd61d1", "#7b68ee", "#00ba38",
+		        "#f8766d","#00b0f6", "#a3a500"]);
+
+	scope.color.domain(["lnx", "win", "mac", "mixed", "sol", "others"]);
 
 	var projection = d3.geo.mercator()
 		.rotate([-180,0]);
@@ -308,7 +311,7 @@ function worldMap(data, scope, args) {
 		         return Math.log(d.size);
 		     })
 		     .style("fill", function(d){
-		         return colors[d.os];
+		         return scope.color(d.os);
 		     });
 
 		// zoom in on click
@@ -340,4 +343,23 @@ function worldMap(data, scope, args) {
 		}
 	});
 
+	// add legends
+    scope.legend = scope.svg.selectAll(".legend")
+    .data(scope.color.domain().slice().reverse())
+  .enter().append("g")
+    .attr("class", "legend")
+    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+   scope.legend.append("rect")
+    .attr("x", scope.width - 18)
+    .attr("width", 18)
+    .attr("height", 18)
+    .style("fill", scope.color);
+
+   scope.legend.append("text")
+    .attr("x", scope.width - 24)
+    .attr("y", 9)
+    .attr("dy", ".35em")
+    .style("text-anchor", "end")
+    .text(function(d) { return d; });
 }
