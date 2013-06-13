@@ -257,6 +257,14 @@ function stackedBar(data, scope, args) {
      .attr("height", function(d) { return scope.y(d.y0) - scope.y(d.y1); })
      .style("fill", function(d) { return scope.color(d.name); });
 
+    $('svg rect').tipsy({
+        gravity: 's',
+        title: function() {
+            var d = this.__data__;
+            return d.name + ": " + (d.y1 - d.y0);
+        }
+     });
+
     scope.legend = scope.svg.selectAll(".legend")
      .data(scope.color.domain().slice().reverse())
    .enter().append("g")
