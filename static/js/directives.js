@@ -314,6 +314,15 @@ function worldMap(data, scope, args) {
 		         return scope.color(d.os);
 		     });
 
+	      $('svg circle').tipsy({
+	          gravity: 's',
+	          title: function() {
+	              var d = this.__data__;
+	              return 'country: ' + d.country
+	                    + ', os: ' + d.os
+	                    + ', size: ' + d.size;
+	          }
+	        });
 		// zoom in on click
 		function click(d) {
 			  var x, y, k;
