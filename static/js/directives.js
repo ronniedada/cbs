@@ -118,6 +118,14 @@ function bar(data, scope, args) {
         .attr('width', scope.x.rangeBand())
         .attr('y', function(d) { return scope.y(d.y); })
         .attr('height', function(d) { return scope.height - scope.y(d.y); });
+
+  $('svg rect').tipsy({
+      gravity: 's',
+      title: function() {
+          var d = this.__data__;
+          return d.y;
+      }
+   });
  
   rect.exit().remove();
 
