@@ -235,12 +235,12 @@ function stackedBar(data, scope, args) {
 	scope.y.domain([0, d3.max(data, function(d) { return d.total; })]);
 
 	scope.svg.append("g")
-     .attr("class", "x axis")
+     .attr("class", "xaxis axis")
      .attr("transform", "translate(0," + scope.height + ")")
      .call(scope.xAxis);
 
 	scope.svg.append('g')
-	.attr('class', 'y axis')
+	.attr('class', 'yaxis axis')
 	.call(scope.yAxis);
 
     scope.xlabel = scope.svg.selectAll(".x")
