@@ -178,7 +178,7 @@ func (vr ViewResults) stackedBar(xIndex int, rangeIndex int,
 
 		for _, xaxis := range xaxesSorted {
 			line := []string{xaxis}
-			for _, i := range rangesSorted {
+			for _, i := range rangesSorted[1:len(rangesSorted)] {
 				if v, ok := bins[xaxis][i]; ok {
 					line = append(line, fmt.Sprintf("%v", v))
 				} else {
